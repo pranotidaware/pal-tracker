@@ -11,6 +11,7 @@ jobs:
   include:
     - stage: build and publish
       language: java
+      before_install: chmod +x gradlew
       jdk: oraclejdk8
       install: skip
       script: ./gradlew clean build -x test
