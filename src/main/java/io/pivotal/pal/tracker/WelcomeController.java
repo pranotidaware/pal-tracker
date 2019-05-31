@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WelcomeController {
 
-    public String message;
+    private String message;
 
     WelcomeController(@Value("${welcome.message}") String message){
         this.message = message;
