@@ -28,7 +28,7 @@ public class TimeEntryController {
 
     @GetMapping("{id}")
     public ResponseEntity<TimeEntry> get(@PathVariable long id) {
-        Optional<TimeEntry> timeEntry = Optional.ofNullable(timeEntryRepository.get(id));
+        Optional<TimeEntry> timeEntry = Optional.ofNullable(timeEntryRepository.find(id));
         return (timeEntry.isPresent()) ?
                 ResponseEntity.ok(timeEntry.get()) :
                 new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,7 +36,7 @@ public class TimeEntryController {
 
     @PutMapping("{id}")
     public ResponseEntity<TimeEntry> update(@PathVariable long id, @RequestBody TimeEntry timeEnt) {
-        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(timeEntryRepository.get(id));
+        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(timeEntryRepository.find(id));
         if(timeEntryRes.isPresent()){
             TimeEntry timeEntry = timeEntryRepository.update(id,timeEnt);
             return ResponseEntity.ok(timeEntry);
@@ -53,8 +53,12 @@ public class TimeEntryController {
 
     @DeleteMapping("{id}")
     public ResponseEntity<TimeEntry> delete(@PathVariable Long id) {
-        Optional<TimeEntry> doomed = Optional.ofNullable(timeEntryRepository.delete(id));
-        return new ResponseEntity<>((doomed.isPresent()) ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
+        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(timeEntryRepository.find(id));
+        if(timeEntryRes.isPresent()){
+           timeEntryRepository.delete(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 
