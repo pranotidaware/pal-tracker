@@ -12,23 +12,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/time-entries")
 public class TimeEntryController {
 
-    public JdbcTimeEntryRepository jdbcTimeEntryRepository;
+    public TimeEntryRepository timeEntryRepository;
 
-    public TimeEntryController(JdbcTimeEntryRepository jdbcTimeEntryRepository){
-        this.jdbcTimeEntryRepository = jdbcTimeEntryRepository;
+    public TimeEntryController(TimeEntryRepository timeEntryRepository){
+        this.timeEntryRepository = timeEntryRepository;
     }
 
 
 
     @PostMapping
     public ResponseEntity<TimeEntry> create(@RequestBody TimeEntry timeEntry) {
-        TimeEntry timeEntryRes = jdbcTimeEntryRepository.create(timeEntry);
+        TimeEntry timeEntryRes = timeEntryRepository.create(timeEntry);
         return new ResponseEntity<>(timeEntryRes, HttpStatus.CREATED);
     }
 
     @GetMapping("{id}")
     public ResponseEntity<TimeEntry> get(@PathVariable long id) {
-        Optional<TimeEntry> timeEntry = Optional.ofNullable(jdbcTimeEntryRepository.find(id));
+        Optional<TimeEntry> timeEntry = Optional.ofNullable(timeEntryRepository.find(id));
         return (timeEntry.isPresent()) ?
                 ResponseEntity.ok(timeEntry.get()) :
                 new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -36,9 +36,9 @@ public class TimeEntryController {
 
     @PutMapping("{id}")
     public ResponseEntity<TimeEntry> update(@PathVariable long id, @RequestBody TimeEntry timeEnt) {
-        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(jdbcTimeEntryRepository.find(id));
+        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(timeEntryRepository.find(id));
         if(timeEntryRes.isPresent()){
-            TimeEntry timeEntry = jdbcTimeEntryRepository.update(id,timeEnt);
+            TimeEntry timeEntry = timeEntryRepository.update(id,timeEnt);
             return ResponseEntity.ok(timeEntry);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -47,15 +47,15 @@ public class TimeEntryController {
     @GetMapping
     public ResponseEntity<List<TimeEntry>> getAll() {
         List<TimeEntry> timeEntryList = new ArrayList<TimeEntry>();;
-        jdbcTimeEntryRepository.list().forEach(timeEntryList::add);
+        timeEntryRepository.list().forEach(timeEntryList::add);
         return ResponseEntity.ok(timeEntryList);
     }
 
     @DeleteMapping("{id}")
     public ResponseEntity<TimeEntry> delete(@PathVariable Long id) {
-        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(jdbcTimeEntryRepository.find(id));
+        Optional<TimeEntry> timeEntryRes = Optional.ofNullable(timeEntryRepository.find(id));
         if(timeEntryRes.isPresent()){
-            jdbcTimeEntryRepository.delete(id);
+           timeEntryRepository.delete(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
