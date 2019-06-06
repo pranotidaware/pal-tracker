@@ -1,8 +1,11 @@
 package io.pivotal.pal.tracker;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class TimeEntry{
+public class TimeEntry implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     public long id;
     public long projectId;
@@ -10,6 +13,7 @@ public class TimeEntry{
     public LocalDate date;
     public int hours;
 
+    public TimeEntry(){}
 
     public TimeEntry(long id, long projectId, long userId, LocalDate date, int hours){
         this.id = id;
